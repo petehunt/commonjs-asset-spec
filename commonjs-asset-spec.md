@@ -21,6 +21,8 @@ In this spec we introduce the idea that static assets are part of the `CommonJS`
 
 A reference implementation based on `browserify` is available; see the [the staticify repo](http://github.com/petehunt/staticify).
 
+An example component (based on [React](http://facebook.github.io/react) is available in [the rx-spinner repo](https://github.com/petehunt/rx-spinner).
+
 ### `require()`ing images
 
 You can `require()` images the same way you `require()` JavaScript modules. It will use the native `require.resolve()` to locate the file. On many popular platforms (including Node and browserify) you must include the file extension (i.e. `var MyImage = require('./MyImage.jpg');`). When you `require()` an image it will return an object that uniquely represents the image and can be used to render it in your environment. In most environments this will be a protocol-relative absolute URL to the image file.
