@@ -21,7 +21,7 @@ In this spec we introduce the idea that static assets are part of the `CommonJS`
 
 A reference implementation based on `browserify` is available; see the [the staticify repo](http://github.com/petehunt/staticify).
 
-An example component (based on [React](http://facebook.github.io/react) is available in [the rx-spinner repo](https://github.com/petehunt/rx-spinner).
+An example component (based on [React](http://facebook.github.io/react)) is available in [the rx-spinner repo](https://github.com/petehunt/rx-spinner).
 
 ### `require()`ing images
 
