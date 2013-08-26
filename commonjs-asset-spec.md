@@ -23,19 +23,15 @@ A reference implementation based on `browserify` is available; see the [the stat
 
 ### `require()`ing images
 
-You can `require()` images the same way you `require()` JavaScript modules except you must include the file extension (i.e. `var MyImage = require('./MyImage.jpg');`). When you `require()` an image it will return an object that uniquely represents the image and can be used to render it in your environment. In most environments this will be a protocol-relative absolute URL to the image file.
+You can `require()` images the same way you `require()` JavaScript modules. It will use the native `require.resolve()` to locate the file. On many popular platforms (including Node and browserify) you must include the file extension (i.e. `var MyImage = require('./MyImage.jpg');`). When you `require()` an image it will return an object that uniquely represents the image and can be used to render it in your environment. In most environments this will be a protocol-relative absolute URL to the image file.
 
 `staticify` returns a data-URI for simplicity (and performs quite well), but a more advanced packager may sprite the image and return an object containing the sprite image URL as well as the coordinates within the sprite.
 
-Support for `.png` and `.jpg` is required (all of these plus `.gif` are included in staticify).
-
 ### `require()`ing stylesheets
 
-You can `require()` CSS the same way you `require()` JavaScript modules except you must include the file extension (i.e. `require('./MyStylesheet.css')`). After this module has been evaluated, any DOM nodes with `class` attributes should get styled by the stylesheet that was required.
+You can `require()` CSS the same way you `require()` JavaScript modules as discussed in the previous section. After this module has been evaluated, any DOM nodes with `class` attributes should get styled by the stylesheet that was required.
 
 `staticify` appends a `<style>` element with inline CSS to the `<head>` of the document. A more advanced packager could link to a concatenated `.css` file or do style calc in JavaScript based on the `class` attribute and assign an inline style to each DOM node instead.
-
-Support for `.css` is required, but this could be extended to support `.less` and `.scss` as well (all of these are included in `staticify`).
 
 ## 2. Modular CSS
 
@@ -51,4 +47,3 @@ This proposal focuses on being easy-to-use and open-ended. There are a few futur
 - **Private CSS classes.** The idea that some CSS classes may be overridden and others may not.
 - **Opinionated rules on CSS specificity.** This will encourage reliable rule overrides if load order changes.
 - **CSS refcounting.** UI elements can enter and leave the DOM. When all DOM nodes that reference a given CSS file leave the DOM, a CSS reaper should be able to prune unused CSS rules.
-- **Rethink semantics based on file extension.** Are we sure that this doesn't make some use cases more difficult?
