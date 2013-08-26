@@ -1,4 +1,4 @@
-# CommonJS components specification
+# CommonJS assets specification
 
 ## Motivation
 
@@ -11,7 +11,7 @@ Existing client-side package tools do not sufficiently address these two points.
 
 ## Initial assumptions
 
-This spec assumes that your components will be delivered as CommonJS modules. It also assumes that your project will have a unique name; generally this will be the `name` field in `package.json`, but `package.json` and `npm` are not strictly required by this specification (though they are encouraged).
+This spec assumes that your package will contain modules that conform to the CommonJS spec. It also assumes that your package will have a unique name; generally this will be the `name` field in `package.json`, but `package.json` and `npm` are not strictly required by this specification (though they are encouraged).
 
 ## 1. Delivering static assets
 
@@ -39,16 +39,16 @@ Support for `.css` is required, but this could be extended to support `.less` an
 
 ## 2. Modular CSS
 
-CSS does not support any form of modularity, so we introduce a simple set of conventions for all CSS that a component may load onto the page.
+CSS does not support any form of modularity, so we introduce a simple set of conventions for all CSS that a package may load onto the page.
 
 - **Only class selectors may be used.** No tags, IDs or anything else. Tag selectors can easily conflict and IDs are not reusable.
-- **All class names must be prefixed by the package's unique name and a dash.** If you're using `package.json` this unique name will come from its `name` field. This is to ensure that class names used in one component won't leak into another one.
+- **All class names must be prefixed by the package's unique name and a dash.** If you're using `package.json` this unique name will come from its `name` field. This is to ensure that class names used in one package won't leak into another one.
 
 ## Future work
 
 This proposal focuses on being easy-to-use and open-ended. There are a few future areas of improvement:
 
 - **Private CSS classes.** The idea that some CSS classes may be overridden and others may not.
-- **Opinionated rules on CSS specificity.** This will encourage reliable rule overrides if the package load order changes.
-- **CSS refcounting.** Components can enter and leave the DOM. When all components that reference a given CSS file leave the DOM, a CSS reaper should be able to prune unused CSS rules.
+- **Opinionated rules on CSS specificity.** This will encourage reliable rule overrides if load order changes.
+- **CSS refcounting.** UI elements can enter and leave the DOM. When all DOM nodes that reference a given CSS file leave the DOM, a CSS reaper should be able to prune unused CSS rules.
 - **Rethink semantics based on file extension.** Are we sure that this doesn't make some use cases more difficult?
