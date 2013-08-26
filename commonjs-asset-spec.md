@@ -51,3 +51,4 @@ This proposal focuses on being easy-to-use and open-ended. There are a few futur
 - **Private CSS classes.** The idea that some CSS classes may be overridden and others may not.
 - **Opinionated rules on CSS specificity.** This will encourage reliable rule overrides if the package load order changes.
 - **CSS refcounting.** Components can enter and leave the DOM. When all components that reference a given CSS file leave the DOM, a CSS reaper should be able to prune unused CSS rules.
+- **Rethink semantics based on file extension.** Are we sure that this doesn't make some use cases more difficult?
