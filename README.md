@@ -1,1 +1,1 @@
-Repo for development of a CommonJS-based modular component spec.
+Repo for development of a CommonJS-based static asset spec.
