@@ -35,7 +35,13 @@ You can `require()` CSS the same way you `require()` JavaScript modules as discu
 
 `staticify` appends a `<style>` element with inline CSS to the `<head>` of the document. A more advanced packager could link to a concatenated `.css` file or do style calc in JavaScript based on the `class` attribute and assign an inline style to each DOM node instead.
 
-## 2. Modular CSS
+### Using `require()` within stylesheets
+
+Using `require()` within stylesheets is be supported. How it will render is based on the resource being required and the packaging system.
+
+In the reference implementation `require()` only works for images and renders as `url(data-uri-of-image)`.
+
+## 2. Modular CSS selectors
 
 CSS does not support any form of modularity, so we introduce a simple set of conventions for all CSS that a package may load onto the page.
 
