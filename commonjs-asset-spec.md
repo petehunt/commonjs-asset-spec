@@ -37,7 +37,7 @@ You can `require()` CSS the same way you `require()` JavaScript modules as discu
 
 ### Using `require()` within stylesheets
 
-Using `require()` within stylesheets is be supported. How it will render is based on the resource being required and the packaging system.
+Using `require()` within stylesheets is supported. How it will render is based on the resource being required and the packaging system.
 
 In the reference implementation `require()` only works for images and renders as `url(data-uri-of-image)`.
 
