@@ -31,3 +31,7 @@ The type of static asset descriptor returned depends on the version of the spec 
   * **Future work**
     * `retain()`/`release()` methods to "garbage collect" stylesheet
     * `.classNames` to support mangling/minifying/modular CSS class names
+
+## Reference implementation
+
+This is currently in production on `Instagram.com` via a set of [webpack](http://webpack.github.io/) plugins and configs. These will be open-sourced.
