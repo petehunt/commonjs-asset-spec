@@ -1,57 +1,33 @@
 # CommonJS assets specification
 
-## Motivation
+This specification addresses how CommonJS modules can express dependencies on non-JavaScript assets. It's basically a fork of the CommonJS modules spec v1.1
 
-Reusing code is great. CommonJS (and in particular `npm`) is a great way to share reusable modules for the server-side. However, it's difficult to use for client-side apps for a few reasons:
+## Contract
 
-1. CommonJS is not designed for expressing static assets that have to map to public URLs. Specificially, today it is impossible to include a static asset like an image in your CommonJS package and figure out what its public-facing URL will be.
-2. CSS is not modular, so stylesheets in multiple packages may have conflicting rules.
+### Module Context
 
-Existing client-side package tools do not sufficiently address these two points. We are proposing a solution to these problems that builds on top of CommonJS, so that users of this spec can continue to use their existing tools.
+* In a module, there is a free variable "requireStatic", that is a Function.
+  * The "requireStatic" function accepts a *static asset identifier* that maps to a static asset.
+  * "requireStatic" returns a JavaScript object that represents the static asset (called a *static asset descriptor*).
+  * If there is a dependency cycle, the foreign module may not have finished executing at the time it is required by one of its transitive dependencies; in this case, the object returned by "requireStatic" must still be a valid static asset descriptor, but may not have all data available yet.
+  * If the requested module cannot be returned, "requireStatic" must throw an error.
 
-## Initial assumptions
+### Static Asset Identifiers
 
-This spec assumes that your package will contain modules that conform to the CommonJS spec. It also assumes that your package will have a unique name; generally this will be the `name` field in `package.json`, but `package.json` and `npm` are not strictly required by this specification (though they are encouraged).
+* Static asset identifiers are resolved with the exact same semantics as the CommonJS `require()` function.
 
-## 1. Delivering static assets
+### Static Asset Descriptors
 
-In this spec we introduce the idea that static assets are part of the `CommonJS` dependency graph. We assert that your JavaScript packaging system (i.e. `browserify`, `RequireJS` or `node-haste`) should be able to optimize your static assets with the knowledge of this graph.
+The type of static asset descriptor returned depends on the version of the spec and the file extension of the asset after resolving the static asset identifier.
 
-### Reference implementation
-
-A reference implementation based on `browserify` is available; see the [the staticify repo](http://github.com/petehunt/staticify).
-
-An example component (based on [React](http://facebook.github.io/react)) is available in [the rx-spinner repo](https://github.com/petehunt/rx-spinner).
-
-### `require()`ing images
-
-You can `require()` images the same way you `require()` JavaScript modules. It will use the native `require.resolve()` to locate the file. On many popular platforms (including Node and browserify) you must include the file extension (i.e. `var MyImage = require('./MyImage.jpg');`). When you `require()` an image it will return an object that uniquely represents the image and can be used to render it in your environment. In most environments this will be a protocol-relative absolute URL to the image file.
-
-`staticify` returns a data-URI for simplicity (and performs quite well), but a more advanced packager may sprite the image and return an object containing the sprite image URL as well as the coordinates within the sprite.
-
-### `require()`ing stylesheets
-
-You can `require()` CSS the same way you `require()` JavaScript modules as discussed in the previous section. After this module has been evaluated, any DOM nodes with `class` attributes should get styled by the stylesheet that was required.
-
-`staticify` appends a `<style>` element with inline CSS to the `<head>` of the document. A more advanced packager could link to a concatenated `.css` file or do style calc in JavaScript based on the `class` attribute and assign an inline style to each DOM node instead.
-
-### Using `require()` within stylesheets
-
-Using `require()` within stylesheets is supported. How it will render is based on the resource being required and the packaging system.
-
-In the reference implementation `require()` only works for images and renders as `url(data-uri-of-image)`.
-
-## 2. Modular CSS selectors
-
-CSS does not support any form of modularity, so we introduce a simple set of conventions for all CSS that a package may load onto the page.
-
-- **Only class selectors may be used.** No tags, IDs or anything else. Tag selectors can easily conflict and IDs are not reusable.
-- **All class names must be prefixed by the package's unique name and a dash.** If you're using `package.json` this unique name will come from its `name` field. This is to ensure that class names used in one package won't leak into another one.
-
-## Future work
-
-This proposal focuses on being easy-to-use and open-ended. There are a few future areas of improvement:
-
-- **Private CSS classes.** The idea that some CSS classes may be overridden and others may not.
-- **Opinionated rules on CSS specificity.** This will encourage reliable rule overrides if load order changes.
-- **CSS refcounting.** UI elements can enter and leave the DOM. When all DOM nodes that reference a given CSS file leave the DOM, a CSS reaper should be able to prune unused CSS rules.
+* `.png`, `.jpg`
+  * Returns an absolute URL to the image, preferably protocol relative.
+  * **Future work**
+    * `.bounds.{left|right|top|bottom}` to support spriting
+    * `.retina` to support `@2x` assets
+* `.css`
+  * Returns null, but has the side effect of inserting the stylesheet into DOM (on the client) or the HTTP response (on the server).
+  * Can use `requireStatic()` instead of `url()` within the stylesheet to refer to a static asset identifier rather than a URL.
+  * **Future work**
+    * `retain()`/`release()` methods to "garbage collect" stylesheet
+    * `.classNames` to support mangling/minifying/modular CSS class names
