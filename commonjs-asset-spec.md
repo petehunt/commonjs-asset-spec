@@ -27,7 +27,7 @@ The type of static asset descriptor returned depends on the version of the spec 
     * `.retina.{src|bounds}` to support `@2x` assets
 * `.css`
   * Returns null, but has the side effect of inserting the stylesheet into DOM (on the client) or the HTTP response (on the server).
-  * Can use `requireStatic()` instead of `url()` within the stylesheet to refer to a static asset identifier rather than a URL.
+  * Can use `requireStatic()` inside of `url()` within the stylesheet to refer to a static asset identifier rather than a URL.
   * **Future work**
     * `retain()`/`release()` methods to "garbage collect" stylesheet
     * `.classNames` to support mangling/minifying/modular CSS class names
